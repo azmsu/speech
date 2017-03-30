@@ -56,6 +56,7 @@ i = 1;
 improvement = Inf;
 prev_L = -Inf;
 while i <= max_iter && improvement >= epsilon
+%     min_L = Inf;
     L = 0;  % likelihood
     
     for n=1:N
@@ -63,7 +64,8 @@ while i <= max_iter && improvement >= epsilon
         T = length(train_n);
         gmm = gmms{n};
         probs = zeros(M, T);  % matrix to store probabilities
-
+%         L = 0;  % likelihood
+        
         % maximum likelihood
         for t=1:T
             x = train_n(:, t);
@@ -84,6 +86,8 @@ while i <= max_iter && improvement >= epsilon
             L = L + log(total);
             probs(:, t) = probs(:, t)./total;
         end
+        
+%         min_L = min(L, min_L);
 
         % update parameters
         for m=1:M
@@ -99,7 +103,10 @@ while i <= max_iter && improvement >= epsilon
         end
     end
     
+%     improvement = min_L - prev_L;
+%     prev_L = min_L;
     improvement = L - prev_L;
     prev_L = L;
     i = i + 1;
 end
+return
